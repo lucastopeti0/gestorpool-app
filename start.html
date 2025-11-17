@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GestorPool - Sistema para Piscineiros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0057FF, #14A38B);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .features {
+            text-align: left;
+            margin: 30px 0;
+        }
+        .feature {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .feature::before {
+            content: '✅';
+            font-size: 1.2em;
+        }
+        .install-btn {
+            background: white;
+            color: #0057FF;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .install-btn:hover {
+            transform: scale(1.05);
+        }
+        .download-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        .download-btn:hover {
+            background: white;
+            color: #0057FF;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🏊‍♂️</div>
+        <h1>GestorPool</h1>
+        <p class="subtitle">Sistema Completo para Piscineiros</p>
+        
+        <div class="features">
+            <div class="feature">Relatórios profissionais em PDF</div>
+            <div class="feature">Upload de fotos (antes/depois)</div>
+            <div class="feature">Sistema de agenda organizado</div>
+            <div class="feature">Funciona offline (sem internet)</div>
+            <div class="feature">Interface otimizada para celular</div>
+            <div class="feature">Instalação como app nativo</div>
+        </div>
+
+        <div class="instructions">
+            <h3>📱 Como Instalar:</h3>
+            <p><strong>Android:</strong> Menu Chrome → "Adicionar à tela inicial"</p>
+            <p><strong>iPhone:</strong> Safari → Compartilhar → "Adicionar à Tela de Início"</p>
+        </div>
+
+        <a href="index.html" class="install-btn">
+            🚀 ABRIR APLICATIVO
+        </a>
+        
+        <br>
+        
+        <a href="GestorPool_App.zip" class="install-btn download-btn" download>
+            💾 BAIXAR CÓDIGO-FONTE
+        </a>
+    </div>
+
+    <script>
+        // Detectar se é dispositivo móvel
+        function isMobile() {
+            return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Adicionar classe para dispositivos móveis
+        if (isMobile()) {
+            document.body.classList.add('mobile');
+        }
+
+        // Log para debug
+        console.log('Página inicial do GestorPool carregada');
+        console.log('Dispositivo móvel:', isMobile());
+    </script>
+</body>
+</html>
