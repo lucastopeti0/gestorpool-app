@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<!-- GestorPool v2.3 FINAL - CORREÇÃO DEFINITIVA COMPLETA - Data: 2025-11-18 00:50:54 -->
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GestorPool - Sistema Profissional para Piscineiros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0057ff 0%, #0041cc 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 87, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 12px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab:active {
+            background: #f0f0f0;
+        }
+
+        .tab.active {
+            color: #0057ff;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #0057ff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            min-height: calc(100vh - 180px);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 16px;
+            color: #333;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #0057ff;
+            box-shadow: 0 0 0 3px rgba(0, 87, 255, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .chemical-tests {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .test-input label {
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .test-input input {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+        .photo-upload {
+            height: 70px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-upload.has-image {
+            height: 70px;
+            border: 1px solid #ccc;
+            background: white;
+        }
+
+        .photo-upload:active {
+            background: #f0f0f0;
+        }
+
+        .photo-upload p {
+            color: #999;
+            font-size: 10px;
+            text-align: center;
+            padding: 6px;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .photo-upload.has-image p {
+            display: none;
+        }
+
+        .photo-upload img.photo-preview {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-upload.has-image img.photo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #0057ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background: #0041cc;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:active {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:active {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:active {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:active {
+            background: #e0a800;
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 13px;
+            margin: 5px 5px 5px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 25px 0;
+        }
+
+        .service-item,
+        .agenda-item,
+        .report-item {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #0057ff;
+        }
+
+        .service-item h4,
+        .agenda-item h4,
+        .report-item h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .details {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .service-item p,
+        .agenda-item p,
+        .report-item p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .button-group .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 8px 12px;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+            }
+            .button-group .btn {
+                min-width: unset;
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0057ff 0%, #0041cc 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 87, 255, 0.2);
+        }
+
+        .stat-card h3 {
+            font-size: 24px;
+            color: white;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .service-list,
+        .agenda-list,
+        .report-list {
+            margin-top: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .chemical-tests {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GestorPool</h1>
+        <p>Sistema Profissional para Piscineiros</p>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('servicos')">Serviços</button>
+            <button class="tab" onclick="showTab('agenda')">Agenda</button>
+            <button class="tab" onclick="showTab('relatorios')">Relatórios</button>
+            <button class="tab" onclick="showTab('configuracoes')">Config</button>
+        </div>
+
+        <!-- Aba Serviços -->
+        <div id="servicos" class="tab-content active">
+            <h2>Novo Serviço</h2>
+            
+            <form id="serviceForm">
+                <div class="form-group">
+                    <label for="clienteNome">Nome do Cliente:</label>
+                    <input type="text" id="clienteNome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clienteTelefone">Telefone:</label>
+                    <input type="tel" id="clienteTelefone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clienteEndereco">Endereço:</label>
+                    <textarea id="clienteEndereco" rows="2" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoServico">Tipo de Serviço:</label>
+                    <select id="tipoServico" required>
+                        <option value="">Selecione...</option>
+                        <option value="Limpeza Completa">Limpeza Completa</option>
+                        <option value="Manutenção">Manutenção</option>
+                        <option value="Tratamento Químico">Tratamento Químico</option>
+                        <option value="Aspiração">Aspiração</option>
+                        <option value="Limpeza da Borda">Limpeza da Borda</option>
+                        <option value="Limpeza do Filtro">Limpeza do Filtro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Testes Químicos:</label>
+                    <div class="chemical-tests">
+                        <div class="test-input">
+                            <label for="phValue">pH</label>
+                            <input type="number" id="phValue" step="0.1" min="0" max="14">
+                        </div>
+                        <div class="test-input">
+                            <label for="cloroValue">Cloro (ppm)</label>
+                            <input type="number" id="cloroValue" step="0.1" min="0" max="10">
+                        </div>
+                        <div class="test-input">
+                            <label for="alcalinidadeValue">Alcalinidade (ppm)</label>
+                            <input type="number" id="alcalinidadeValue" step="1" min="0" max="200">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posições dos Registros -->
+                <div class="form-group">
+                    <label>Posições dos Registros:</label>
+                    <div class="photo-grid">
+                        <div class="photo-upload" onclick="document.getElementById('fotoDreno').click()">
+                            <div id="drenoPreview">
+                                <p>🚰 Dreno</p>
+                            </div>
+                        </div>
+                        <div class="photo-upload" onclick="document.getElementById('fotoSuccao').click()">
+                            <div id="succaoPreview">
+                                <p>⚡ Sucção</p>
+                            </div>
+                        </div>
+                        <div class="photo-upload" onclick="document.getElementById('fotoRetorno').click()">
+                            <div id="retornoPreview">
+                                <p>🔄 Retorno</p>
+                            </div>
+                        </div>
+                        <div class="photo-upload" onclick="document.getElementById('fotoDrenoPrincipal').click()">
+                            <div id="drenoPrincipalPreview">
+                                <p>💧 Dreno Principal</p>
+                            </div>
+                        </div>
+                        <div class="photo-upload" onclick="document.getElementById('fotoAbastecimento').click()">
+                            <div id="abastecimentoPreview">
+                                <p>➤ Abastecimento</p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="fotoDreno" accept="image/*" capture="camera" class="hidden">
+                    <input type="file" id="fotoSuccao" accept="image/*" capture="camera" class="hidden">
+                    <input type="file" id="fotoRetorno" accept="image/*" capture="camera" class="hidden">
+                    <input type="file" id="fotoDrenoPrincipal" accept="image/*" capture="camera" class="hidden">
+                    <input type="file" id="fotoAbastecimento" accept="image/*" capture="camera" class="hidden">
+                </div>
+
+                <!-- Fotos dos testes químicos -->
+                <div class="form-group">
+                    <label>Testes Químicos:</label>
+                    <div class="photo-grid">
+                        <div class="photo-upload" onclick="document.getElementById('fotoCloro').click()">
+                            <div id="cloroPreview">
+                                <p>🧪 Cloro</p>
+                            </div>
+                        </div>
+                        <div class="photo-upload" onclick="document.getElementById('fotoPh').click()">
+                            <div id="phPreview">
+                                <p>🧪 pH</p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="fotoCloro" accept="image/*" capture="camera" class="hidden">
+                    <input type="file" id="fotoPh" accept="image/*" capture="camera" class="hidden">
+                </div>
+
+                <!-- Fotos principais -->
+                <div class="form-group">
+                    <label>Fotos do Serviço:</label>
+                    <div class="photo-grid">
+                        <div class="photo-upload" onclick="document.getElementById('fotoAntes').click()">
+                            <div id="antesPreview">
+                                <p>📸 Antes</p>
+                            </div>
+                        </div>
+                        <div class="photo-upload" onclick="document.getElementById('fotoDepois').click()">
+                            <div id="depoisPreview">
+                                <p>📸 Depois</p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="fotoAntes" accept="image/*" capture="camera" class="hidden">
+                    <input type="file" id="fotoDepois" accept="image/*" capture="camera" class="hidden">
+                </div>
+
+                <div class="form-group">
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorServico">Valor do Serviço (R$):</label>
+                    <input type="number" id="valorServico" step="0.01" min="0">
+                </div>
+
+                <button type="submit" class="btn">💾 Salvar Serviço</button>
+                <button type="button" class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar</button>
+            </form>
+
+            <hr style="margin: 20px 0;">
+
+            <h3>Serviços Recentes</h3>
+            <div id="servicesList" class="service-list"></div>
+        </div>
+
+        <!-- Aba Agenda -->
+        <div id="agenda" class="tab-content">
+            <h2>Agenda de Serviços</h2>
+            
+            <form id="agendaForm">
+                <div class="form-group">
+                    <label for="agendaCliente">Cliente:</label>
+                    <input type="text" id="agendaCliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="agendaData">Data:</label>
+                    <input type="date" id="agendaData" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="agendaHora">Hora:</label>
+                    <input type="time" id="agendaHora" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="agendaServico">Tipo de Serviço:</label>
+                    <select id="agendaServico" required>
+                        <option value="">Selecione...</option>
+                        <option value="Limpeza Completa">Limpeza Completa</option>
+                        <option value="Manutenção">Manutenção</option>
+                        <option value="Tratamento Químico">Tratamento Químico</option>
+                        <option value="Aspiração">Aspiração</option>
+                        <option value="Limpeza da Borda">Limpeza da Borda</option>
+                        <option value="Limpeza do Filtro">Limpeza do Filtro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="agendaObservacoes">Observações:</label>
+                    <textarea id="agendaObservacoes" rows="2"></textarea>
+                </div>
+
+                <button type="submit" class="btn">📅 Agendar</button>
+            </form>
+
+            <hr style="margin: 20px 0;">
+
+            <h3>Próximos Serviços</h3>
+            <div id="agendaList" class="agenda-list"></div>
+        </div>
+
+        <!-- Aba Relatórios -->
+        <div id="relatorios" class="tab-content">
+            <h2>Relatórios</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="totalServicos">0</h3>
+                    <p>Total de Serviços</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="faturamentoMes">R$ 0,00</h3>
+                    <p>Faturamento do Mês</p>
+                </div>
+            </div>
+
+            <h3>Filtro por Período</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                <div class="form-group">
+                    <label for="filtroDataInicio">Data Início:</label>
+                    <input type="date" id="filtroDataInicio">
+                </div>
+                <div class="form-group">
+                    <label for="filtroDataFim">Data Fim:</label>
+                    <input type="date" id="filtroDataFim">
+                </div>
+            </div>
+            <button class="btn" onclick="filtrarRelatorios()">🔍 Filtrar</button>
+            <button class="btn btn-secondary" onclick="limparFiltros()">🗑️ Limpar</button>
+
+            <hr style="margin: 20px 0;">
+
+            <h3>Lista de Serviços</h3>
+            <div id="relatoriosList" class="report-list"></div>
+            
+            <button class="btn btn-success" onclick="gerarPDF()">📄 Gerar PDF Completo</button>
+        </div>
+
+        <!-- Aba Configurações -->
+        <div id="configuracoes" class="tab-content">
+            <h2>Configurações</h2>
+            
+            <div class="form-group">
+                <label for="nomePiscineiro">Seu Nome:</label>
+                <input type="text" id="nomePiscineiro" placeholder="Digite seu nome">
+            </div>
+
+            <div class="form-group">
+                <label for="telefonePiscineiro">Seu Telefone:</label>
+                <input type="tel" id="telefonePiscineiro" placeholder="(11) 99999-9999">
+            </div>
+
+            <div class="form-group">
+                <label for="empresaNome">Nome da Empresa:</label>
+                <input type="text" id="empresaNome" placeholder="Nome da sua empresa">
+            </div>
+
+            <button class="btn" onclick="salvarConfiguracoes()">💾 Salvar Configurações</button>
+
+            <hr style="margin: 20px 0;">
+
+            <h3>Dados</h3>
+            <button class="btn btn-warning" onclick="limparDadosCorrompidos()" style="margin-bottom: 10px;">🔧 Limpar Dados Corrompidos</button>
+            <button class="btn btn-secondary" onclick="exportarDados()">📤 Exportar Dados</button>
+            <button class="btn btn-danger" onclick="limparDados()">🗑️ Limpar Todos os Dados</button>
+        </div>
+    </div>
+
+    <!-- Incluir jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        // VERIFICAÇÃO: Interface Nova v2.0 - NÃO APAGAR
+        console.log('GestorPool v2.3 - Interface Nova Carregada com Correção Definitiva');
+
+        // Função utilitária para garantir que todos os dados sejam strings
+        function forcarString(valor) {
+            if (valor === null || valor === undefined) return '';
+            if (typeof valor === 'object') return String(valor);
+            return String(valor);
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarDados();
+            atualizarListas();
+            atualizarEstatisticas();
+            configurarEventListeners();
+        });
+
+        function configurarEventListeners() {
+            // Fotos dos registros
+            document.getElementById('fotoDreno').addEventListener('change', function(e) {
+                previewImage(e.target, 'drenoPreview');
+            });
+
+            document.getElementById('fotoSuccao').addEventListener('change', function(e) {
+                previewImage(e.target, 'succaoPreview');
+            });
+
+            document.getElementById('fotoRetorno').addEventListener('change', function(e) {
+                previewImage(e.target, 'retornoPreview');
+            });
+
+            document.getElementById('fotoDrenoPrincipal').addEventListener('change', function(e) {
+                previewImage(e.target, 'drenoPrincipalPreview');
+            });
+
+            document.getElementById('fotoAbastecimento').addEventListener('change', function(e) {
+                previewImage(e.target, 'abastecimentoPreview');
+            });
+
+            // Fotos dos testes químicos
+            document.getElementById('fotoCloro').addEventListener('change', function(e) {
+                previewImage(e.target, 'cloroPreview');
+            });
+
+            document.getElementById('fotoPh').addEventListener('change', function(e) {
+                previewImage(e.target, 'phPreview');
+            });
+
+            // Fotos principais
+            document.getElementById('fotoAntes').addEventListener('change', function(e) {
+                previewImage(e.target, 'antesPreview');
+            });
+
+            document.getElementById('fotoDepois').addEventListener('change', function(e) {
+                previewImage(e.target, 'depoisPreview');
+            });
+
+            // Formulário de serviço
+            document.getElementById('serviceForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarServico();
+            });
+
+            // Formulário de agenda
+            document.getElementById('agendaForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarAgenda();
+            });
+        }
+
+        function showTab(tabName) {
+            // Ocultar todas as abas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remover classe active de todas as abas
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(tab => tab.classList.remove('active'));
+
+            // Mostrar aba selecionada
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Atualizar conteúdo da aba
+            if (tabName === 'relatorios') {
+                atualizarListas();
+                atualizarEstatisticas();
+            }
+        }
+
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            const uploadDiv = preview.parentElement;
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = '<img src="' + e.target.result + '" class="photo-preview" alt="Foto">';
+                    uploadDiv.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function processarImagem(inputId) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const input = document.getElementById(inputId);
+                    if (!input || !input.files || !input.files[0]) {
+                        resolve('');
+                        return;
+                    }
+                    
+                    const file = input.files[0];
+                    
+                    // Validar tipo de arquivo
+                    if (!file.type.startsWith('image/')) {
+                        console.warn(`Arquivo ${inputId} não é uma imagem válida`);
+                        resolve('');
+                        return;
+                    }
+                    
+                    // Validar tamanho do arquivo (máximo 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        console.warn(`Arquivo ${inputId} é muito grande (máximo 5MB)`);
+                        resolve('');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = (e) => {
+                        if (e.target.result) {
+                            resolve(e.target.result);
+                        } else {
+                            resolve('');
+                        }
+                    };
+                    
+                    reader.onerror = (error) => {
+                        console.error(`Erro ao ler arquivo ${inputId}:`, error);
+                        resolve(''); // Não falhar o salvamento por causa de uma imagem
+                    };
+                    
+                    reader.readAsDataURL(file);
+                } catch (error) {
+                    console.error(`Erro ao processar imagem ${inputId}:`, error);
+                    resolve(''); // Não falhar o salvamento
+                }
+            });
+        }
+
+        async function salvarServico() {
+            console.log('Iniciando salvamento do serviço...');
+            
+            try {
+                // Validação básica apenas nos campos essenciais
+                const clienteNome = document.getElementById('clienteNome').value.trim();
+                const clienteTelefone = document.getElementById('clienteTelefone').value.trim();
+                const clienteEndereco = document.getElementById('clienteEndereco').value.trim();
+                const tipoServico = document.getElementById('tipoServico').value.trim();
+
+                console.log('Campos a validar:', { clienteNome, clienteTelefone, clienteEndereco, tipoServico });
+
+                // Campos obrigatórios mínimos
+                if (!clienteNome) {
+                    alert('⚠️ Nome do cliente é obrigatório.');
+                    return;
+                }
+                
+                if (!clienteTelefone) {
+                    alert('⚠️ Telefone do cliente é obrigatório.');
+                    return;
+                }
+                
+                if (!clienteEndereco) {
+                    alert('⚠️ Endereço do cliente é obrigatório.');
+                    return;
+                }
+                
+                if (!tipoServico) {
+                    alert('⚠️ Tipo de serviço é obrigatório.');
+                    return;
+                }
+
+                console.log('Validação OK, processando imagens...');
+
+                // Processar imagens de forma segura
+                const imagens = await processarTodasImagens();
+                
+                console.log('Imagens processadas, criando objeto do serviço...');
+
+                const servico = {
+                    id: Date.now(),
+                    clienteNome: String(clienteNome || ''),
+                    clienteTelefone: String(clienteTelefone || ''),
+                    clienteEndereco: String(clienteEndereco || ''),
+                    tipoServico: String(tipoServico || ''),
+                    phValue: String(document.getElementById('phValue').value.trim() || ''),
+                    cloroValue: String(document.getElementById('cloroValue').value.trim() || ''),
+                    alcalinidadeValue: String(document.getElementById('alcalinidadeValue').value.trim() || ''),
+                    observacoes: String(document.getElementById('observacoes').value.trim() || ''),
+                    valorServico: String(document.getElementById('valorServico').value.trim() || '0'),
+                    data: new Date().toISOString(),
+                    // Fotos dos registros (opcionais)
+                    fotoDreno: String(imagens.fotoDreno || ''),
+                    fotoSuccao: String(imagens.fotoSuccao || ''),
+                    fotoRetorno: String(imagens.fotoRetorno || ''),
+                    fotoDrenoPrincipal: String(imagens.fotoDrenoPrincipal || ''),
+                    fotoAbastecimento: String(imagens.fotoAbastecimento || ''),
+                    // Fotos dos testes (opcionais)
+                    fotoCloro: String(imagens.fotoCloro || ''),
+                    fotoPh: String(imagens.fotoPh || ''),
+                    // Fotos principais (opcionais)
+                    fotoAntes: String(imagens.fotoAntes || ''),
+                    fotoDepois: String(imagens.fotoDepois || '')
+                };
+
+                console.log('Serviço criado, salvando no localStorage...');
+
+                // Salvar no localStorage
+                let servicos = [];
+                try {
+                    const existingData = localStorage.getItem('servicos');
+                    if (existingData) {
+                        servicos = JSON.parse(existingData);
+                        if (!Array.isArray(servicos)) {
+                            console.warn('Dados do localStorage não são um array válido, resetando...');
+                            servicos = [];
+                        }
+                    }
+                } catch (error) {
+                    console.error('Erro ao ler dados do localStorage:', error);
+                    servicos = [];
+                }
+                
+                servicos.push(servico);
+                localStorage.setItem('servicos', JSON.stringify(servicos));
+                console.log('Serviço salvo com ID:', servico.id);
+
+                // Limpar formulário
+                limparFormulario();
+
+                // Atualizar listas
+                atualizarListas();
+                atualizarEstatisticas();
+
+                alert('✅ Serviço salvo com sucesso!');
+                
+            } catch (error) {
+                console.error('Erro completo:', {
+                    message: error.message,
+                    stack: error.stack,
+                    name: error.name,
+                    fileName: error.fileName,
+                    lineNumber: error.lineNumber
+                });
+                
+                // Tentar salvamento simplificado como fallback
+                try {
+                    console.log('Tentando salvamento simplificado...');
+                    const servicoSimplificado = {
+                        id: Date.now(),
+                        clienteNome: clienteNome,
+                        clienteTelefone: clienteTelefone,
+                        clienteEndereco: clienteEndereco,
+                        tipoServico: tipoServico,
+                        data: new Date().toISOString(),
+                        observacoes: document.getElementById('observacoes').value.trim(),
+                        valorServico: document.getElementById('valorServico').value.trim()
+                    };
+                    
+                    const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+                    servicos.push(servicoSimplificado);
+                    localStorage.setItem('servicos', JSON.stringify(servicos));
+                    
+                    limparFormulario();
+                    atualizarListas();
+                    atualizarEstatisticas();
+                    
+                    alert('✅ Serviço salvo com sucesso (modo simplificado)!');
+                } catch (fallbackError) {
+                    console.error('Erro no fallback também:', fallbackError);
+                    alert('❌ Erro persistente ao salvar serviço. Tente recarregar a página.');
+                }
+            }
+        }
+
+        async function processarTodasImagens() {
+            const imagens = {};
+            const camposDeImagem = [
+                'fotoDreno', 'fotoSuccao', 'fotoRetorno', 'fotoDrenoPrincipal', 'fotoAbastecimento',
+                'fotoCloro', 'fotoPh', 'fotoAntes', 'fotoDepois'
+            ];
+            
+            console.log('Processando imagens:', camposDeImagem);
+            
+            for (const campo of camposDeImagem) {
+                imagens[campo] = await processarImagem(campo);
+            }
+            
+            console.log('Todas as imagens processadas');
+            return imagens;
+        }
+
+        function salvarAgenda() {
+            const agenda = {
+                id: Date.now(),
+                cliente: document.getElementById('agendaCliente').value,
+                data: document.getElementById('agendaData').value,
+                hora: document.getElementById('agendaHora').value,
+                servico: document.getElementById('agendaServico').value,
+                observacoes: document.getElementById('agendaObservacoes').value,
+                status: 'agendado'
+            };
+
+            // Salvar no localStorage
+            const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+            agendas.push(agenda);
+            localStorage.setItem('agendas', JSON.stringify(agendas));
+
+            // Limpar formulário
+            document.getElementById('agendaForm').reset();
+
+            // Atualizar lista
+            atualizarListas();
+
+            alert('✅ Agendamento salvo com sucesso!');
+        }
+
+        function atualizarListas() {
+            atualizarServicosList();
+            atualizarAgendaList();
+            atualizarRelatoriosList();
+        }
+
+        function atualizarServicosList() {
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            const lista = document.getElementById('servicesList');
+
+            if (servicos.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: #666;">Nenhum serviço cadastrado ainda.</p>';
+                return;
+            }
+
+            lista.innerHTML = servicos.slice(-5).reverse().map(servico => 
+                '<div class="service-item">' +
+                    '<h4>' + servico.clienteNome + '</h4>' +
+                    '<div class="details">' +
+                        '📅 ' + new Date(servico.data).toLocaleDateString('pt-BR') + ' | ' + 
+                        '🏊 ' + servico.tipoServico + ' | ' + 
+                        '💰 R$ ' + parseFloat(servico.valorServico || 0).toFixed(2) +
+                    '</div>' +
+                    '<p>' + servico.clienteEndereco + '</p>' +
+                    '<button class="btn-danger btn-small" onclick="excluirServico(' + servico.id + ')">Excluir</button>' +
+                '</div>'
+            ).join('');
+        }
+
+        function atualizarAgendaList() {
+            const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+            const lista = document.getElementById('agendaList');
+
+            // Filtrar apenas agendamentos futuros
+            const hoje = new Date();
+            const agendamentosFuturos = agendas.filter(agenda => {
+                const dataAgenda = new Date(agenda.data);
+                return dataAgenda >= hoje || (dataAgenda.toDateString() === hoje.toDateString());
+            });
+
+            if (agendamentosFuturos.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: #666;">Nenhum agendamento futuro.</p>';
+                return;
+            }
+
+            lista.innerHTML = agendamentosFuturos.sort((a, b) => new Date(a.data) - new Date(b.data)).map(agenda => 
+                '<div class="agenda-item">' +
+                    '<h4>' + agenda.cliente + '</h4>' +
+                    '<div class="details">' +
+                        '📅 ' + new Date(agenda.data).toLocaleDateString('pt-BR') + ' às ' + agenda.hora + ' | ' + 
+                        '🏊 ' + agenda.servico +
+                    '</div>' +
+                    '<p>' + (agenda.observacoes || 'Sem observações') + '</p>' +
+                    '<button class="btn-success btn-small" onclick="concluirAgenda(' + agenda.id + ')">Concluir</button>' +
+                    '<button class="btn-danger btn-small" onclick="excluirAgenda(' + agenda.id + ')">Excluir</button>' +
+                '</div>'
+            ).join('');
+        }
+
+        function atualizarRelatoriosList() {
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            const lista = document.getElementById('relatoriosList');
+
+            if (servicos.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: #666;">Nenhum serviço para exibir.</p>';
+                return;
+            }
+
+            lista.innerHTML = servicos.slice().reverse().map(servico => 
+                '<div class="report-item">' +
+                    '<h4>' + servico.clienteNome + '</h4>' +
+                    '<div class="details">' +
+                        '📅 ' + new Date(servico.data).toLocaleDateString('pt-BR') + ' | ' + 
+                        '🏊 ' + servico.tipoServico + ' | ' + 
+                        '💰 R$ ' + parseFloat(servico.valorServico || 0).toFixed(2) +
+                    '</div>' +
+                    '<p>📍 ' + servico.clienteEndereco + '</p>' +
+                    '<p>📞 ' + servico.clienteTelefone + '</p>' +
+                    (servico.phValue ? '<p>🧪 pH: ' + servico.phValue + ' | Cloro: ' + servico.cloroValue + 'ppm | Alcalinidade: ' + servico.alcalinidadeValue + 'ppm</p>' : '') +
+                    (servico.observacoes ? '<p>📝 ' + servico.observacoes + '</p>' : '') +
+                    '<button class="btn btn-success btn-small" onclick="gerarPDFIndividual(' + servico.id + ')">📄 Relatório Individual</button>' +
+                '</div>'
+            ).join('');
+        }
+
+        function atualizarEstatisticas() {
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            
+            // Total de serviços
+            document.getElementById('totalServicos').textContent = servicos.length;
+
+            // Faturamento do mês atual
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth();
+            const anoAtual = hoje.getFullYear();
+            
+            const servicosDoMes = servicos.filter(servico => {
+                const dataServico = new Date(servico.data);
+                return dataServico.getMonth() === mesAtual && dataServico.getFullYear() === anoAtual;
+            });
+
+            const faturamento = servicosDoMes.reduce((total, servico) => {
+                return total + parseFloat(servico.valorServico || 0);
+            }, 0);
+
+            document.getElementById('faturamentoMes').textContent = 'R$ ' + faturamento.toFixed(2);
+        }
+
+        function limparFormulario() {
+            document.getElementById('serviceForm').reset();
+            
+            // Limpar previews das fotos dos registros
+            document.getElementById('drenoPreview').innerHTML = '<p>🚰 Dreno</p>';
+            document.getElementById('succaoPreview').innerHTML = '<p>⚡ Sucção</p>';
+            document.getElementById('retornoPreview').innerHTML = '<p>🔄 Retorno</p>';
+            document.getElementById('drenoPrincipalPreview').innerHTML = '<p>💧 Dreno Principal</p>';
+            document.getElementById('abastecimentoPreview').innerHTML = '<p>➤ Abastecimento</p>';
+            
+            // Limpar previews dos testes químicos
+            document.getElementById('cloroPreview').innerHTML = '<p>🧪 Cloro</p>';
+            document.getElementById('phPreview').innerHTML = '<p>🧪 pH</p>';
+            
+            // Limpar previews das fotos principais
+            document.getElementById('antesPreview').innerHTML = '<p>📸 Antes</p>';
+            document.getElementById('depoisPreview').innerHTML = '<p>📸 Depois</p>';
+            
+            // Remover classes has-image de todas as divs photo-upload
+            const photoUploads = document.querySelectorAll('.photo-upload');
+            photoUploads.forEach(div => {
+                div.classList.remove('has-image');
+            });
+        }
+
+        function excluirServico(id) {
+            if (confirm('Tem certeza que deseja excluir este serviço?')) {
+                const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+                const servicosFiltrados = servicos.filter(servico => servico.id !== id);
+                localStorage.setItem('servicos', JSON.stringify(servicosFiltrados));
+                
+                atualizarListas();
+                atualizarEstatisticas();
+                
+                alert('✅ Serviço excluído com sucesso!');
+            }
+        }
+
+        function concluirAgenda(id) {
+            if (confirm('Marcar este agendamento como concluído?')) {
+                const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+                const agenda = agendas.find(a => a.id === id);
+                
+                if (agenda) {
+                    agenda.status = 'concluido';
+                    localStorage.setItem('agendas', JSON.stringify(agendas));
+                    
+                    atualizarListas();
+                    
+                    alert('✅ Agendamento marcado como concluído!');
+                }
+            }
+        }
+
+        function excluirAgenda(id) {
+            if (confirm('Tem certeza que deseja excluir este agendamento?')) {
+                const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+                const agendasFiltradas = agendas.filter(agenda => agenda.id !== id);
+                localStorage.setItem('agendas', JSON.stringify(agendasFiltradas));
+                
+                atualizarListas();
+                
+                alert('✅ Agendamento excluído com sucesso!');
+            }
+        }
+
+        function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            const configuracoes = JSON.parse(localStorage.getItem('configuracoes') || '{}');
+            
+            if (servicos.length === 0) {
+                alert('⚠️ Nenhum serviço para gerar relatório.');
+                return;
+            }
+
+            // Configurar fonte e cores
+            doc.setFontSize(20);
+            doc.setTextColor(0, 87, 255); // Azul
+            
+            // Cabeçalho
+            doc.text('RELATÓRIO DE SERVIÇOS', 20, 30);
+            doc.setFontSize(16);
+            doc.text('GESTORPOOL', 20, 45);
+            
+            // Informações da empresa
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            if (configuracoes.empresaNome) {
+                doc.text('Empresa: ' + configuracoes.empresaNome, 20, 60);
+            }
+            if (configuracoes.nomePiscineiro) {
+                doc.text('Responsável: ' + configuracoes.nomePiscineiro, 20, 70);
+            }
+            if (configuracoes.telefonePiscineiro) {
+                doc.text('Telefone: ' + configuracoes.telefonePiscineiro, 20, 80);
+            }
+            
+            // Data do relatório
+            doc.text('Gerado em: ' + new Date().toLocaleDateString('pt-BR'), 20, 95);
+            doc.text('Total de serviços: ' + servicos.length, 20, 105);
+            
+            let yPosition = 120;
+            
+            // Para cada serviço
+            servicos.forEach((servico, index) => {
+                // Garantir que todos os valores sejam strings válidas
+                const servicoCorrigido = {
+                    ...servico,
+                    clienteNome: String(servico.clienteNome || ''),
+                    clienteTelefone: String(servico.clienteTelefone || ''),
+                    clienteEndereco: String(servico.clienteEndereco || ''),
+                    tipoServico: String(servico.tipoServico || ''),
+                    phValue: servico.phValue ? String(servico.phValue) : '',
+                    cloroValue: servico.cloroValue ? String(servico.cloroValue) : '',
+                    alcalinidadeValue: servico.alcalinidadeValue ? String(servico.alcalinidadeValue) : '',
+                    observacoes: servico.observacoes ? String(servico.observacoes) : '',
+                    valorServico: parseFloat(servico.valorServico || 0).toFixed(2)
+                };
+
+                // Verificar se precisa de nova página
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                
+                // Dados do serviço
+                doc.setFontSize(14);
+                doc.setTextColor(0, 87, 255);
+                doc.text('SERVIÇO ' + (index + 1), 20, yPosition);
+                
+                yPosition += 10;
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                
+                // Informações básicas
+                const linhasInfo = [
+                    'Cliente: ' + String(servicoCorrigido.clienteNome || ''),
+                    'Telefone: ' + String(servicoCorrigido.clienteTelefone || ''),
+                    'Endereço: ' + String(servicoCorrigido.clienteEndereco || ''),
+                    'Tipo de Serviço: ' + String(servicoCorrigido.tipoServico || ''),
+                    'Data: ' + new Date(servicoCorrigido.data).toLocaleDateString('pt-BR'),
+                    'Valor: R$ ' + String(servicoCorrigido.valorServico || '0.00')
+                ];
+                
+                linhasInfo.forEach(linha => {
+                    if (yPosition > 280) {
+                        doc.addPage();
+                        yPosition = 30;
+                    }
+                    doc.text(linha, 20, yPosition);
+                    yPosition += 7;
+                });
+                
+                // Testes químicos
+                if (servicoCorrigido.phValue && servicoCorrigido.phValue !== '') {
+                    doc.text('pH: ' + servicoCorrigido.phValue + ' | Cloro: ' + servicoCorrigido.cloroValue + 'ppm | Alcalinidade: ' + servicoCorrigido.alcalinidadeValue + 'ppm', 20, yPosition);
+                    yPosition += 7;
+                }
+                
+                // Observações
+                if (servicoCorrigido.observacoes && servicoCorrigido.observacoes !== '') {
+                    doc.text('Observações: ' + servicoCorrigido.observacoes, 20, yPosition);
+                    yPosition += 7;
+                }
+                
+                // Fotos principais
+                if (servicoCorrigido.fotoAntes && servicoCorrigido.fotoAntes !== null && servicoCorrigido.fotoAntes !== '') {
+                    yPosition += 5;
+                    if (yPosition > 250) {
+                        doc.addPage();
+                        yPosition = 30;
+                    }
+                    doc.text('Foto Antes:', 20, yPosition);
+                    try {
+                        doc.addImage(servicoCorrigido.fotoAntes, 'JPEG', 20, yPosition + 5, 60, 45);
+                        yPosition += 55;
+                    } catch (e) {
+                        console.log('Erro ao adicionar foto antes:', e);
+                        yPosition += 10;
+                    }
+                }
+                
+                if (servicoCorrigido.fotoDepois && servicoCorrigido.fotoDepois !== null && servicoCorrigido.fotoDepois !== '') {
+                    if (yPosition > 250) {
+                        doc.addPage();
+                        yPosition = 30;
+                    }
+                    doc.text('Foto Depois:', 20, yPosition);
+                    try {
+                        doc.addImage(servicoCorrigido.fotoDepois, 'JPEG', 20, yPosition + 5, 60, 45);
+                        yPosition += 55;
+                    } catch (e) {
+                        console.log('Erro ao adicionar foto depois:', e);
+                        yPosition += 10;
+                    }
+                }
+                
+                // Linha separadora
+                yPosition += 10;
+                doc.setDrawColor(0, 87, 255);
+                doc.line(20, yPosition, 190, yPosition);
+                yPosition += 15;
+            });
+            
+            // Salvar PDF
+            const nomeArquivo = 'relatorio_gestorpool_' + new Date().toISOString().split('T')[0] + '.pdf';
+            doc.save(nomeArquivo);
+            
+            alert('✅ Relatório PDF gerado com sucesso!');
+        }
+
+        function gerarPDFIndividual(id) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            const configuracoes = JSON.parse(localStorage.getItem('configuracoes') || '{}');
+            
+            // Encontrar o serviço específico
+            const servico = servicos.find(s => s.id === id);
+            
+            if (!servico) {
+                alert('⚠️ Serviço não encontrado.');
+                return;
+            }
+            
+            // Garantir que todos os valores sejam strings válidas
+            const servicoCorrigido = {
+                ...servico,
+                clienteNome: String(servico.clienteNome || ''),
+                clienteTelefone: String(servico.clienteTelefone || ''),
+                clienteEndereco: String(servico.clienteEndereco || ''),
+                tipoServico: String(servico.tipoServico || ''),
+                phValue: servico.phValue ? String(servico.phValue) : '',
+                cloroValue: servico.cloroValue ? String(servico.cloroValue) : '',
+                alcalinidadeValue: servico.alcalinidadeValue ? String(servico.alcalinidadeValue) : '',
+                observacoes: servico.observacoes ? String(servico.observacoes) : '',
+                valorServico: parseFloat(servico.valorServico || 0).toFixed(2)
+            };
+
+            // Configurar fonte e cores
+            doc.setFontSize(20);
+            doc.setTextColor(0, 87, 255); // Azul
+            
+            // Cabeçalho
+            doc.text('RELATÓRIO DE SERVIÇO', 20, 30);
+            doc.setFontSize(16);
+            doc.text('GESTORPOOL', 20, 45);
+            
+            // Informações da empresa
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            if (configuracoes.empresaNome) {
+                doc.text('Empresa: ' + configuracoes.empresaNome, 20, 60);
+            }
+            if (configuracoes.nomePiscineiro) {
+                doc.text('Responsável: ' + configuracoes.nomePiscineiro, 20, 70);
+            }
+            if (configuracoes.telefonePiscineiro) {
+                doc.text('Telefone: ' + configuracoes.telefonePiscineiro, 20, 80);
+            }
+            
+            // Data do relatório
+            doc.text('Gerado em: ' + new Date().toLocaleDateString('pt-BR'), 20, 95);
+            
+            let yPosition = 110;
+            
+            // Dados do serviço
+            doc.setFontSize(14);
+            doc.setTextColor(0, 87, 255);
+            doc.text('SERVIÇO - ' + String(servicoCorrigido.clienteNome || ''), 20, yPosition);
+            
+            yPosition += 15;
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            
+            // Informações básicas
+            const linhasInfo = [
+                'Cliente: ' + String(servicoCorrigido.clienteNome || ''),
+                'Telefone: ' + String(servicoCorrigido.clienteTelefone || ''),
+                'Endereço: ' + String(servicoCorrigido.clienteEndereco || ''),
+                'Tipo de Serviço: ' + String(servicoCorrigido.tipoServico || ''),
+                'Data: ' + new Date(servicoCorrigido.data).toLocaleDateString('pt-BR'),
+                'Valor: R$ ' + String(servicoCorrigido.valorServico || '0.00')
+            ];
+            
+            linhasInfo.forEach(linha => {
+                if (yPosition > 280) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.text(linha, 20, yPosition);
+                yPosition += 10;
+            });
+            
+            // Testes químicos
+            if (servicoCorrigido.phValue && servicoCorrigido.phValue !== '') {
+                yPosition += 5;
+                if (yPosition > 280) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 87, 255);
+                doc.text('TESTES QUÍMICOS:', 20, yPosition);
+                yPosition += 10;
+                doc.setTextColor(0, 0, 0);
+                doc.text('pH: ' + servicoCorrigido.phValue + ' | Cloro: ' + servicoCorrigido.cloroValue + 'ppm | Alcalinidade: ' + servicoCorrigido.alcalinidadeValue + 'ppm', 20, yPosition);
+                yPosition += 15;
+            }
+            
+            // Fotos dos registros
+            const registros = [
+                { key: 'fotoDreno', label: 'DRENO' },
+                { key: 'fotoSuccao', label: 'SUÇÃO' },
+                { key: 'fotoRetorno', label: 'RETORNO' },
+                { key: 'fotoDrenoPrincipal', label: 'DRENO PRINCIPAL' },
+                { key: 'fotoAbastecimento', label: 'ABASTECIMENTO' }
+            ];
+
+            registros.forEach(registro => {
+                if (servicoCorrigido[registro.key] && servicoCorrigido[registro.key] !== null && servicoCorrigido[registro.key] !== '') {
+                    if (yPosition > 250) {
+                        doc.addPage();
+                        yPosition = 30;
+                    }
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 87, 255);
+                    doc.text('POSIÇÃO DO REGISTRO - ' + registro.label + ':', 20, yPosition);
+                    yPosition += 5;
+                    try {
+                        doc.addImage(servicoCorrigido[registro.key], 'JPEG', 20, yPosition, 80, 60);
+                        yPosition += 70;
+                    } catch (e) {
+                        console.log('Erro ao adicionar foto ' + registro.label + ':', e);
+                        yPosition += 10;
+                    }
+                }
+            });
+
+            // Fotos dos testes químicos
+            if (servicoCorrigido.fotoCloro && servicoCorrigido.fotoCloro !== null && servicoCorrigido.fotoCloro !== '') {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 87, 255);
+                doc.text('TESTE DE CLORO:', 20, yPosition);
+                yPosition += 5;
+                try {
+                    doc.addImage(servicoCorrigido.fotoCloro, 'JPEG', 20, yPosition, 80, 60);
+                    yPosition += 70;
+                } catch (e) {
+                    console.log('Erro ao adicionar foto cloro:', e);
+                    yPosition += 10;
+                }
+            }
+
+            if (servicoCorrigido.fotoPh && servicoCorrigido.fotoPh !== null && servicoCorrigido.fotoPh !== '') {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 87, 255);
+                doc.text('TESTE DE pH:', 20, yPosition);
+                yPosition += 5;
+                try {
+                    doc.addImage(servicoCorrigido.fotoPh, 'JPEG', 20, yPosition, 80, 60);
+                    yPosition += 70;
+                } catch (e) {
+                    console.log('Erro ao adicionar foto pH:', e);
+                    yPosition += 10;
+                }
+            }
+            
+            // Fotos principais
+            if (servicoCorrigido.fotoAntes && servicoCorrigido.fotoAntes !== null && servicoCorrigido.fotoAntes !== '') {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 87, 255);
+                doc.text('FOTO ANTES:', 20, yPosition);
+                yPosition += 5;
+                try {
+                    doc.addImage(servicoCorrigido.fotoAntes, 'JPEG', 20, yPosition, 80, 60);
+                    yPosition += 70;
+                } catch (e) {
+                    console.log('Erro ao adicionar foto antes:', e);
+                    yPosition += 10;
+                }
+            }
+            
+            if (servicoCorrigido.fotoDepois && servicoCorrigido.fotoDepois !== null && servicoCorrigido.fotoDepois !== '') {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 87, 255);
+                doc.text('FOTO DEPOIS:', 20, yPosition);
+                yPosition += 5;
+                try {
+                    doc.addImage(servicoCorrigido.fotoDepois, 'JPEG', 20, yPosition, 80, 60);
+                    yPosition += 70;
+                } catch (e) {
+                    console.log('Erro ao adicionar foto depois:', e);
+                    yPosition += 10;
+                }
+            }
+            
+            // Observações
+            if (servicoCorrigido.observacoes && servicoCorrigido.observacoes !== '') {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 30;
+                }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 87, 255);
+                doc.text('OBSERVAÇÕES:', 20, yPosition);
+                yPosition += 10;
+                doc.setTextColor(0, 0, 0);
+                doc.text(servicoCorrigido.observacoes, 20, yPosition);
+                yPosition += 20;
+            }
+            
+            // Salvar PDF
+            const nomeArquivo = 'relatorio_' + String(servicoCorrigido.clienteNome || 'cliente').replace(/[^a-zA-Z0-9]/g, '_') + '_' + new Date(servicoCorrigido.data).toLocaleDateString('pt-BR').replace(/\//g, '-') + '.pdf';
+            doc.save(nomeArquivo);
+            
+            alert('✅ Relatório individual gerado com sucesso!');
+        }
+
+        function visualizarServico(id) {
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            const servico = servicos.find(s => s.id === id);
+            
+            if (!servico) {
+                alert('⚠️ Serviço não encontrado.');
+                return;
+            }
+
+            // Garantir que todos os valores sejam strings
+            const servicoCorrigido = {
+                ...servico,
+                clienteNome: String(servico.clienteNome || ''),
+                clienteTelefone: String(servico.clienteTelefone || ''),
+                clienteEndereco: String(servico.clienteEndereco || ''),
+                tipoServico: String(servico.tipoServico || ''),
+                phValue: servico.phValue ? String(servico.phValue) : '',
+                cloroValue: servico.cloroValue ? String(servico.cloroValue) : '',
+                alcalinidadeValue: servico.alcalinidadeValue ? String(servico.alcalinidadeValue) : '',
+                observacoes: servico.observacoes ? String(servico.observacoes) : '',
+                valorServico: parseFloat(servico.valorServico || 0).toFixed(2)
+            };
+
+            // Criar modal para visualização
+            const modalHTML = `
+                <div id="visualizarModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                " onclick="fecharModal()">
+                    <div style="
+                        background: white;
+                        max-width: 90%;
+                        max-height: 90%;
+                        border-radius: 10px;
+                        padding: 20px;
+                        overflow-y: auto;
+                        position: relative;
+                    " onclick="event.stopPropagation()">
+                        <button onclick="fecharModal()" style="
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            background: #dc3545;
+                            color: white;
+                            border: none;
+                            border-radius: 50%;
+                            width: 30px;
+                            height: 30px;
+                            cursor: pointer;
+                            font-weight: bold;
+                        ">×</button>
+                        
+                        <h2 style="color: #0057ff; margin-bottom: 20px;">📋 Detalhes do Serviço</h2>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div><strong>Cliente:</strong> ${String(servicoCorrigido.clienteNome || '')}</div>
+                            <div><strong>Telefone:</strong> ${String(servicoCorrigido.clienteTelefone || '')}</div>
+                            <div><strong>Endereço:</strong> ${String(servicoCorrigido.clienteEndereco || '')}</div>
+                            <div><strong>Tipo:</strong> ${String(servicoCorrigido.tipoServico || '')}</div>
+                            <div><strong>Data:</strong> ${new Date(servicoCorrigido.data).toLocaleDateString('pt-BR')}</div>
+                            <div><strong>Valor:</strong> R$ ${String(servicoCorrigido.valorServico || '0.00')}</div>
+                        </div>
+                        
+                        ${servicoCorrigido.phValue ? `
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #0057ff;">🧪 Testes Químicos</h4>
+                                <p>pH: ${servicoCorrigido.phValue} | Cloro: ${servicoCorrigido.cloroValue}ppm | Alcalinidade: ${servicoCorrigido.alcalinidadeValue}ppm</p>
+                            </div>
+                        ` : ''}
+                        
+                        ${servicoCorrigido.observacoes ? `
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #0057ff;">📝 Observações</h4>
+                                <p>${servicoCorrigido.observacoes}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button onclick="gerarPDFIndividual(${servico.id})" style="
+                                background: #28a745;
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                font-weight: bold;
+                            ">📄 Gerar PDF</button>
+                            <button onclick="fecharModal()" style="
+                                background: #6c757d;
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                font-weight: bold;
+                            ">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function fecharModal() {
+            const modal = document.getElementById('visualizarModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function salvarConfiguracoes() {
+            const configuracoes = {
+                nomePiscineiro: document.getElementById('nomePiscineiro').value,
+                telefonePiscineiro: document.getElementById('telefonePiscineiro').value,
+                empresaNome: document.getElementById('empresaNome').value
+            };
+
+            localStorage.setItem('configuracoes', JSON.stringify(configuracoes));
+            alert('✅ Configurações salvas com sucesso!');
+        }
+
+        function carregarConfiguracoes() {
+            const configuracoes = JSON.parse(localStorage.getItem('configuracoes') || '{}');
+            
+            document.getElementById('nomePiscineiro').value = configuracoes.nomePiscineiro || '';
+            document.getElementById('telefonePiscineiro').value = configuracoes.telefonePiscineiro || '';
+            document.getElementById('empresaNome').value = configuracoes.empresaNome || '';
+        }
+
+        function exportarDados() {
+            const dados = {
+                servicos: JSON.parse(localStorage.getItem('servicos') || '[]'),
+                agendas: JSON.parse(localStorage.getItem('agendas') || '[]'),
+                configuracoes: JSON.parse(localStorage.getItem('configuracoes') || '{}'),
+                dataExportacao: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'gestorpool_backup_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            alert('✅ Dados exportados com sucesso!');
+        }
+
+        function limparDadosCorrompidos() {
+            if (confirm('Isso irá limpar e reformatar todos os dados do localStorage para corrigir erros "[object Object]". Deseja continuar?')) {
+                try {
+                    const servicosAntigos = JSON.parse(localStorage.getItem('servicos') || '[]');
+                    if (servicosAntigos.length > 0) {
+                        const servicosCorrigidos = servicosAntigos.map((servico, index) => ({
+                            id: servico.id || Date.now() + index,
+                            clienteNome: forcarString(servico.clienteNome || 'Cliente ' + (index + 1)),
+                            clienteTelefone: forcarString(servico.clienteTelefone || '(00) 00000-0000'),
+                            clienteEndereco: forcarString(servico.clienteEndereco || 'Endereço Teste'),
+                            tipoServico: forcarString(servico.tipoServico || 'Serviço Teste'),
+                            phValue: forcarString(servico.phValue || ''),
+                            cloroValue: forcarString(servico.cloroValue || ''),
+                            alcalinidadeValue: forcarString(servico.alcalinidadeValue || ''),
+                            observacoes: forcarString(servico.observacoes || 'Serviço reformatado'),
+                            valorServico: forcarString(servico.valorServico || '0'),
+                            data: servico.data || new Date().toISOString(),
+                            fotoDreno: forcarString(servico.fotoDreno || ''),
+                            fotoSuccao: forcarString(servico.fotoSuccao || ''),
+                            fotoRetorno: forcarString(servico.fotoRetorno || ''),
+                            fotoDrenoPrincipal: forcarString(servico.fotoDrenoPrincipal || ''),
+                            fotoAbastecimento: forcarString(servico.fotoAbastecimento || ''),
+                            fotoCloro: forcarString(servico.fotoCloro || ''),
+                            fotoPh: forcarString(servico.fotoPh || ''),
+                            fotoAntes: forcarString(servico.fotoAntes || ''),
+                            fotoDepois: forcarString(servico.fotoDepois || '')
+                        }));
+                        
+                        localStorage.setItem('servicos', JSON.stringify(servicosCorrigidos));
+                        console.log('Dados corrigidos: ' + servicosCorrigidos.length + ' serviços reformatados');
+                        alert('✅ Dados corrompidos foram limpos e reformatados! Agora teste novamente.');
+                        atualizarListas();
+                        atualizarEstatisticas();
+                    } else {
+                        alert('ℹ️ Não há dados para corrigir.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao limpar dados:', error);
+                    localStorage.removeItem('servicos');
+                    alert('✅ LocalStorage foi limpo. Recarregue a página e teste novamente.');
+                }
+            }
+        }
+
+        function filtrarRelatorios() {
+            const dataInicio = document.getElementById('filtroDataInicio').value;
+            const dataFim = document.getElementById('filtroDataFim').value;
+            const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+            const lista = document.getElementById('relatoriosList');
+
+            let servicosFiltrados = servicos;
+
+            if (dataInicio) {
+                servicosFiltrados = servicosFiltrados.filter(servico => 
+                    new Date(servico.data) >= new Date(dataInicio)
+                );
+            }
+
+            if (dataFim) {
+                servicosFiltrados = servicosFiltrados.filter(servico => 
+                    new Date(servico.data) <= new Date(dataFim)
+                );
+            }
+
+            if (servicosFiltrados.length === 0) {
+                lista.innerHTML = '<p style="text-align: center; color: #666;">Nenhum serviço encontrado no período especificado.</p>';
+                return;
+            }
+
+            lista.innerHTML = servicosFiltrados.slice().reverse().map(servico => {
+                // Garantir que todos os valores sejam strings
+                const clienteNome = servico.clienteNome ? String(servico.clienteNome) : '';
+                const clienteTelefone = servico.clienteTelefone ? String(servico.clienteTelefone) : '';
+                const clienteEndereco = servico.clienteEndereco ? String(servico.clienteEndereco) : '';
+                const tipoServico = servico.tipoServico ? String(servico.tipoServico) : '';
+                const valorServico = parseFloat(servico.valorServico || 0).toFixed(2);
+                const phValue = servico.phValue ? String(servico.phValue) : '';
+                const cloroValue = servico.cloroValue ? String(servico.cloroValue) : '';
+                const alcalinidadeValue = servico.alcalinidadeValue ? String(servico.alcalinidadeValue) : '';
+                const observacoes = servico.observacoes ? String(servico.observacoes) : '';
+                
+                return '<div class="report-item">' +
+                    '<h4>' + String(clienteNome || '') + '</h4>' +
+                    '<div class="details">' +
+                        '📅 ' + new Date(servico.data).toLocaleDateString('pt-BR') + ' | ' + 
+                        '🏊 ' + String(tipoServico || '') + ' | ' + 
+                        '💰 R$ ' + String(valorServico || '0.00') +
+                    '</div>' +
+                    '<p>📍 ' + String(clienteEndereco || '') + '</p>' +
+                    '<p>📞 ' + String(clienteTelefone || '') + '</p>' +
+                    (phValue ? '<p>🧪 pH: ' + String(phValue || '') + ' | Cloro: ' + String(cloroValue || '') + 'ppm | Alcalinidade: ' + String(alcalinidadeValue || '') + 'ppm</p>' : '') +
+                    (observacoes ? '<p>📝 ' + String(observacoes || '') + '</p>' : '') +
+                    '<div class="button-group">' +
+                        '<button class="btn btn-success btn-small" onclick="gerarPDFIndividual(' + servico.id + ')">📄 Relatório Individual</button>' +
+                        '<button class="btn btn-info btn-small" onclick="visualizarServico(' + servico.id + ')">👁️ Visualizar</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtroDataInicio').value = '';
+            document.getElementById('filtroDataFim').value = '';
+            atualizarRelatoriosList();
+        }
+
+        function limparDados() {
+            if (confirm('⚠️ ATENÇÃO: Esta ação irá apagar TODOS os dados (serviços, agendamentos e configurações). Tem certeza?')) {
+                if (confirm('Esta é sua última chance! Deseja realmente apagar todos os dados?')) {
+                    localStorage.clear();
+                    atualizarListas();
+                    atualizarEstatisticas();
+                    carregarConfiguracoes();
+                    alert('✅ Todos os dados foram apagados.');
+                }
+            }
+        }
+
+        function carregarDados() {
+            carregarConfiguracoes();
+            // Verificar e corrigir dados corrompidos
+            verificarDadosCorrompidos();
+        }
+
+        function verificarDadosCorrompidos() {
+            try {
+                const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+                if (Array.isArray(servicos)) {
+                    let dadosCorrompidos = false;
+                    const servicosCorrigidos = servicos.map(servico => {
+                        // Verificar se algum campo importante está como "[object Object]"
+                        if (typeof servico.clienteNome === 'object' || 
+                            typeof servico.clienteTelefone === 'object' ||
+                            typeof servico.clienteEndereco === 'object' ||
+                            typeof servico.tipoServico === 'object') {
+                            dadosCorrompidos = true;
+                            console.log('Dados corrompidos encontrados, corrigindo...');
+                            return {
+                                id: servico.id || Date.now(),
+                                clienteNome: String(servico.clienteNome || 'Cliente Teste'),
+                                clienteTelefone: String(servico.clienteTelefone || '(00) 00000-0000'),
+                                clienteEndereco: String(servico.clienteEndereco || 'Endereço Teste'),
+                                tipoServico: String(servico.tipoServico || 'Serviço Teste'),
+                                phValue: String(servico.phValue || ''),
+                                cloroValue: String(servico.cloroValue || ''),
+                                alcalinidadeValue: String(servico.alcalinidadeValue || ''),
+                                observacoes: String(servico.observacoes || 'Teste'),
+                                valorServico: String(servico.valorServico || '0'),
+                                data: servico.data || new Date().toISOString(),
+                                // Fotos (manter as existentes se houver)
+                                fotoDreno: String(servico.fotoDreno || ''),
+                                fotoSuccao: String(servico.fotoSuccao || ''),
+                                fotoRetorno: String(servico.fotoRetorno || ''),
+                                fotoDrenoPrincipal: String(servico.fotoDrenoPrincipal || ''),
+                                fotoAbastecimento: String(servico.fotoAbastecimento || ''),
+                                fotoCloro: String(servico.fotoCloro || ''),
+                                fotoPh: String(servico.fotoPh || ''),
+                                fotoAntes: String(servico.fotoAntes || ''),
+                                fotoDepois: String(servico.fotoDepois || '')
+                            };
+                        }
+                        return servico;
+                    });
+                    
+                    if (dadosCorrompidos) {
+                        localStorage.setItem('servicos', JSON.stringify(servicosCorrigidos));
+                        console.log('Dados corrompidos foram corrigidos automaticamente!');
+                        atualizarListas();
+                    }
+                }
+            } catch (error) {
+                console.log('Erro ao verificar dados, limpando localStorage...', error);
+                localStorage.removeItem('servicos');
+            }
+        }
+    </script>
+</body>
+</html>
